@@ -14,15 +14,17 @@ function Description({ descriptionText }) {
   const [leftWidth, setLeftWidth] = useState(50);
   const [dragging, setDragging] = useState(false);
 
-  const isDragging = (e) => {
+  const isDragging = (e: MouseEvent) => {
     setDragging(true);
+    e.preventDefault();
   };
 
-  const stopDragging = (e) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const stopDragging = (e: MouseEvent) => {
     if (!dragging) return;
     setDragging(false);
   };
-  const onDrag = (e) => {
+  const onDrag = (e: MouseEvent) => {
     if (!dragging) return;
     const newLeftWidth = (e.clientX / window.innerWidth) * 100;
     if (newLeftWidth < 10 || newLeftWidth > 90) return;
@@ -31,7 +33,7 @@ function Description({ descriptionText }) {
   const sanatizedMarkdown = Dompurify.sanitize(descriptionText);
   return (
     <div
-      className=" flex h-[100vh] w-full"
+      className=" flex h-screen w-screen"
       onMouseMove={onDrag}
       onMouseUp={stopDragging}
     >
@@ -57,14 +59,17 @@ function Description({ descriptionText }) {
         onMouseDown={isDragging}
       ></div>
       {/*divider between left and right panel */}
-      <div className="rightPanel" style={{ width: `100-${leftWidth}%` }}>
+      <div
+        className="rightPanel h-full overflow-auto"
+        style={{ width: `${100 - leftWidth}%` }}
+      >
         <AceEditor
           mode="javascript"
           theme="monokai"
           name="editor"
           className="editor"
-          fontSize={16}
-          // style={{ width: "60%", height: "800px" }}
+          fontSize={30}
+          style={{ width: "100%" }}
           setOptions={{
             enableBasicAutocompletion: true,
             enableLiveAutocompletion: true,
